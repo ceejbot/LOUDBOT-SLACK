@@ -22,17 +22,13 @@ var LOUDBOT = module.exports = function LOUDBOT()
 
     try
     {
-        THIS.LOUDS = FS.readFileSync(SAVEFILE, 'UTF8').trim().split(/\n/);
-        THIS.LOUDS = THIS.LOUDS.map(function(LOUD)
-        {
-            return JSON.parse(LOUD);
-        });
+        THIS.LOUDS = FS.readFileSync(SAVEFILE, 'UTF8').trim().split('\n');
     }
     catch (ERRRRROR)
     {
         THIS.LOUDS = [];
     }
-}
+};
 
 LOUDBOT.prototype.LISTENUP = function LISTENUP(MSG)
 {
@@ -53,7 +49,7 @@ LOUDBOT.prototype.REMEMBER = function REMEMBER(LOUD)
     if (SAVING) return;
 
     SAVING = true;
-    FS.appendFile(SAVEFILE, JSON.stringify(WAITING), 'UTF8', function()
+    FS.appendFile(SAVEFILE, WAITING.join('\n') + '\n', 'UTF8', function()
     {
         SAVING = false;
     });
