@@ -1,4 +1,4 @@
-var FS    = require('fs');
+var FS = require('fs');
 
 function ISLOUD(MSG)
 {
@@ -28,6 +28,8 @@ var LOUDBOT = module.exports = function LOUDBOT()
     {
         THIS.LOUDS = [];
     }
+
+    THIS.LOUDS = THIS.LOUDS.concat(STARTERS);
 };
 
 LOUDBOT.prototype.LISTENUP = function LISTENUP(MSG)
@@ -60,20 +62,13 @@ LOUDBOT.prototype.YELL = function YELL()
 {
     var THIS = this;
 
-    var LEN = (THIS.LOUDS.length + STARTERS.length);
+    var LEN = THIS.LOUDS.length;
     var L = Math.floor(Math.random() * LEN)
     var LOUD = THIS.LASTLOUD = THIS.LOUDS[L];
-    var MSG;
-
-    if (!LOUD)
-      MSG = STARTERS[L % STARTERS.length];
-    else
-      MSG = LOUD.MSG;
-
-    return MSG;
+    return LOUD;
 };
 
 LOUDBOT.prototype.THELOUDS = function THELOUDS()
 {
-    return this.LOUDS.concat(STARTERS);
+    return this.LOUDS;
 };

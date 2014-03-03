@@ -13,12 +13,19 @@ SERVER.use(RESTIFY.gzipResponse());
 SERVER.use(RESTIFY.bodyParser({ mapParams: false }));
 
 SERVER.get('/PING', PING);
+SERVER.get('/LOUDS', LOUDS);
 SERVER.post('/MESSAGE', MESSAGE);
 SERVER.listen(process.env.port || 3000);
 
 function PING(REQUEST, RESPONSE, NEXT)
 {
     RESPONSE.send(200, 'PONG');
+    NEXT();
+}
+
+function LOUDS(REQUEST, RESPONSE, NEXT)
+{
+    RESPONSE.send(LOUDBOT.THELOUDS());
     NEXT();
 }
 
