@@ -1,0 +1,27 @@
+{
+  "name": "LOUDBOT-SLACK",
+  "version": "0.0.1",
+  "description": "LOUDBOT FOR SLACK.COM CHAT",
+  "main": "SLACKER.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node SLACKER.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/ceejbot/LOUDBOT-SLACK.git"
+  },
+  "keywords": [
+    "LOUDBOT",
+    "slack"
+  ],
+  "author": "C J Silverio <ceejceej@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ceejbot/LOUDBOT-SLACK/issues"
+  },
+  "homepage": "https://github.com/ceejbot/LOUDBOT-SLACK",
+  "dependencies": {
+    "restify": "^2.6.2"
+  }
+}
