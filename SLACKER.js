@@ -14,7 +14,7 @@ SERVER.use(RESTIFY.bodyParser({ mapParams: false }));
 
 SERVER.get('/PING', PING);
 SERVER.post('/MESSAGE', MESSAGE);
-SERVER.listen(process.ENV.port || 3000);
+SERVER.listen(process.env.port || 3000);
 
 function PING(REQUEST, RESPONSE, NEXT)
 {
