@@ -1,6 +1,6 @@
 {
   "name": "loudbot-slack",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "LOUDBOT FOR SLACK.COM CHAT",
   "main": "SLACKER.js",
   "scripts": {
