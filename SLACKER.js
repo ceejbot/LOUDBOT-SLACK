@@ -3,8 +3,13 @@ var
     RESTIFY  = require('restify')
     ;
 
-var LOUDBOT = new SLACKBOT();
+var TOKENS;
+if (process.env.TOKEN)
+{
+    TOKENS = process.env.TOKEN.split(',');
+}
 
+var LOUDBOT = new SLACKBOT();
 var SERVER = RESTIFY.createServer();
 
 SERVER.use(RESTIFY.acceptParser(SERVER.acceptable));
@@ -15,7 +20,7 @@ SERVER.use(RESTIFY.bodyParser({ mapParams: false }));
 SERVER.get('/PING', PING);
 SERVER.get('/LOUDS', LOUDS);
 SERVER.post('/MESSAGE', MESSAGE);
-SERVER.listen(process.env.port || 3000);
+SERVER.listen(process.env.PORT || 4444);
 
 function PING(REQUEST, RESPONSE, NEXT)
 {
@@ -31,6 +36,12 @@ function LOUDS(REQUEST, RESPONSE, NEXT)
 
 function MESSAGE(REQUEST, RESPONSE, NEXT)
 {
+    if (TOKENS)
+    {
+        var IDX = TOKENS.indexOf(REQUEST.body.token);
+        if (IDX === -1) return NEXT(new RESTIFY.ForbiddenError('NO LOUDS FOR YOU'));
+    }
+
     var WHAT;
     if (REQUEST.body.user_name !== 'slackbot')
         WHAT = LOUDBOT.LISTENUP(REQUEST.body.text);
