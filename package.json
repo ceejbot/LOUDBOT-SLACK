@@ -1,27 +1,29 @@
 {
   "name": "loudbot-slack",
-  "version": "0.0.4",
   "description": "LOUDBOT FOR SLACK.COM CHAT",
-  "main": "SLACKER.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node SLACKER.js"
+  "version": "0.1.0",
+  "author": "C J Silverio <ceejceej@gmail.com>",
+  "bugs": {
+    "url": "https://github.com/ceejbot/LOUDBOT-SLACK/issues"
   },
-  "repository": {
-    "type": "git",
-    "url": "git://github.com/ceejbot/LOUDBOT-SLACK.git"
+  "dependencies": {
+    "markoff": "^2.2.0",
+    "restify": "^2.6.2",
+    "slack-api": "ceejbot/slack-api"
   },
+  "homepage": "https://github.com/ceejbot/LOUDBOT-SLACK",
   "keywords": [
     "LOUDBOT",
     "slack"
   ],
-  "author": "C J Silverio <ceejceej@gmail.com>",
   "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/ceejbot/LOUDBOT-SLACK/issues"
+  "main": "SLACKER.js",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/ceejbot/LOUDBOT-SLACK.git"
   },
-  "homepage": "https://github.com/ceejbot/LOUDBOT-SLACK",
-  "dependencies": {
-    "restify": "^2.6.2"
+  "scripts": {
+    "start": "node SLACKER.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
   }
 }

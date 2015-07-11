@@ -4,9 +4,9 @@ var
     ;
 
 var TOKENS;
-if (process.env.TOKEN)
+if (process.env.TOKENS)
 {
-    TOKENS = process.env.TOKEN.split(',');
+    TOKENS = process.env.TOKENS.split(',');
 }
 
 var LOUDBOT = new SLACKBOT();
@@ -44,7 +44,7 @@ function MESSAGE(REQUEST, RESPONSE, NEXT)
 
     var WHAT;
     if (REQUEST.body.user_name !== 'slackbot')
-        WHAT = LOUDBOT.LISTENUP(REQUEST.body.text);
+        WHAT = LOUDBOT.LISTENUP(REQUEST.body);
 
     if (WHAT)
         RESPONSE.json(200, { text: WHAT, channel: REQUEST.body.channel_name });
