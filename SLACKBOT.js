@@ -64,6 +64,7 @@ LOUDBOT.prototype.GOGOGO = function GOGOGO()
 LOUDBOT.prototype.LISTENUP = function LISTENUP(DATA)
 {
 	if (!DATA.text) return;
+	if (DATA.subtype === 'bot_message') return;
 	var THIS = this;
 
 	if (ISLOUD(DATA.text))
