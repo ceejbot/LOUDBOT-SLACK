@@ -1,11 +1,17 @@
-var FS = require('fs');
-var MARKOV = require('markoff');
-var MARK = new MARKOV();
-var API = require('slack-api');
+var
+	BORING_EMOJI = require('emoji-list'),
+	FS = require('fs'),
+	MARKOV = require('markoff'),
+	MARK = new MARKOV(),
+	SLACK = require('@slack/client'),
+	SLACK_EVENTS = SLACK.CLIENT_EVENTS.RTM,
+	RTM_EVENTS = SLACK.RTM_EVENTS,
+	LOG = console.log
+	;
 
 function ISLOUD(MSG)
 {
-    return MSG !== MSG.toLowerCase() && MSG === MSG.toUpperCase();
+	return MSG !== MSG.toLowerCase() && MSG === MSG.toUpperCase();
 }
 
 var STARTERFILE = __dirname + '/STARTERS';
@@ -18,140 +24,145 @@ var WAITING = [];
 
 var LOUDBOT = module.exports = function LOUDBOT()
 {
-    if (!(this instanceof LOUDBOT))
-        return new LOUDBOT();
+	if (!(this instanceof LOUDBOT))
+		return new LOUDBOT();
 
-    var THIS = this;
+	var THIS = this;
 
-    try
-    {
-        THIS.LOUDS = FS.readFileSync(SAVEFILE, 'UTF8').trim().split('\n');
-    }
-    catch (ERRRRROR)
-    {
-        THIS.LOUDS = [];
-    }
+	try
+	{
+		THIS.LOUDS = FS.readFileSync(SAVEFILE, 'UTF8').trim().split('\n');
+	}
+	catch (ERRRRROR)
+	{
+		THIS.LOUDS = [];
+	}
 
-    THIS.LOUDS = THIS.LOUDS.concat(STARTERS);
+	THIS.LOUDS = THIS.LOUDS.concat(STARTERS);
 
-    THIS.LOUDS.forEach(function(LOUD)
-    {
-        MARK.addTokens(LOUD.split(/\s+/g));
-    });
+	THIS.LOUDS.forEach(function(LOUD)
+	{
+		MARK.addTokens(LOUD.split(/\s+/g));
+	});
+
+	THIS.WEB = new SLACK.WebClient(process.env.SLACK_API_TOKEN);
+	THIS.RTM = new SLACK.RtmClient(process.env.SLACK_API_TOKEN, {logLevel: 'warn'});
+	THIS.RTM.on(RTM_EVENTS.MESSAGE, function(DATA) { THIS.LISTENUP(DATA); });
+};
+
+LOUDBOT.prototype.GOGOGO = function GOGOGO()
+{
+	var THIS = this;
+
+	THIS.RTM.start();
+	THIS.RTM.on(SLACK_EVENTS.RTM_CONNECTION_OPENED, function slackClientOpened()
+	{
+		LOG('LOUDBOT IS NOW OPERATIONAL');
+	});
 };
 
 LOUDBOT.prototype.LISTENUP = function LISTENUP(DATA)
 {
-    var MSG = DATA.text;
-    var THIS = this;
-    var SPECIAL = THIS.ISSPECIAL(MSG);
+	if (!DATA.text) return;
+	var THIS = this;
 
-    if (SPECIAL) return SPECIAL;
-    if (ISLOUD(MSG))
-    {
-        THIS.REMEMBER(MSG);
-        return THIS.YELL();
-    }
+	if (ISLOUD(DATA.text))
+	{
+		THIS.REMEMBER(DATA.text);
+		THIS.YELL(DATA.channel);
+		return;
+	}
 
-    return THIS.DOEMOJI(DATA);
+	THIS.DOEMOJI(DATA);
 };
 
-var EMOJI = [
-    'shipit',
-    'sheep',
-    'smiley_cat',
-    'smile_cat',
-    'heart_eyes_cat',
-    'kissing_cat',
-    'smirk_cat',
-    'scream_cat',
-    'crying_cat_face',
-    'joy_cat',
-    'pouting_cat',
-    'cat',
-    'cat2', 'thumbsup', 'thumbsdown', 'facepunch',
-    'sparkles',
+var CUSTOM_EMOJI = [
+    // put yours here
 ];
+
+var EMOJI = [];
+for (var I = 0; I < BORING_EMOJI.length; I++)
+	EMOJI.push(BORING_EMOJI[I].replace(/:(\w+):/g, '$1'));
+EMOJI = EMOJI.concat(CUSTOM_EMOJI);
+
+// LOUDBOT LIKES CUSTOM EMOJI AND ALSO OLD-SCHOOL FOR LOOPS
+var EMOJI_PATTERNS = [];
+for (I = 0; I < CUSTOM_EMOJI.length; I++)
+	EMOJI_PATTERNS.push(new RegExp('(^|\W)' + CUSTOM_EMOJI[I] + '(\W|$)'));
+
+LOUDBOT.prototype.CHOOSE_EMOJI = function CHOOSE_EMOJI(MSG)
+{
+	for (var I = 0; I < EMOJI_PATTERNS.length; I++)
+	{
+		if (MSG.match(EMOJI_PATTERNS[I]) && (Math.floor(Math.random() * 100) < 10))
+			return CUSTOM_EMOJI[I];
+	}
+
+	if (MSG.match(/(\?|!)/) && (Math.floor(Math.random() * 100) < 2))
+		return EMOJI[Math.floor(Math.random() * EMOJI.length)];
+};
 
 LOUDBOT.prototype.DOEMOJI = function DOEMOJI(DATA)
 {
-    // SOMETIMES LOUDBOT USES EMOJI
-    if (!process.env.SLACK_TOKEN)
-        return;
+	// SOMETIMES LOUDBOT USES EMOJI
+	var THIS = this;
 
-    if (!DATA.text.match(/(\?|!)/) || (Math.floor(Math.random() * 100) < 75))
-        return;
+	var EMO = THIS.CHOOSE_EMOJI(DATA.text);
+	if (!EMO)
+		return;
 
-    var M = Math.floor(Math.random() * EMOJI.length);
-    var OPTS =
-    {
-        token: process.env.SLACK_TOKEN,
-        name: EMOJI[M],
-        channel: DATA.channel_id,
-        timestamp: DATA.timestamp
-    };
-    API.reactions.add(OPTS, function(ERROR, RESPONSE)
-    {
-        if (ERROR) console.log(ERROR);
-    });
+	var OPTS = {
+		name: EMO,
+		channel: DATA.channel_id,
+		timestamp: DATA.timestamp
+	};
+	THIS.WEB.reactions.add(OPTS, function(ERROR, RESPONSE)
+	{
+		if (ERROR) console.log(ERROR);
+	});
 };
 
-var BANANAS = [
-    'http://media.fi.gosupermodel.com/displaypicture?imageid=4981105&large=1',
-    'http://minionslovebananas.com/images/gallery/preview/Chiquita-DM2-minion-banana-1.jpg',
-    'http://minionslovebananas.com/images/gallery/preview/Chiquita-DM2-minion-banana-3.jpg',
-    'http://minionslovebananas.com/images/gallery/preview/Chiquita-DM2-minion-dave-bananas.jpg',
-    'http://minionslovebananas.com/images/gallery/preview/Chiquita-DM2-gallery_phil_eating_banana.jpg',
-    'http://minionslovebananas.com/images/right-side/fruit_head_minion.jpg',
-    'http://media-cache-ec0.pinimg.com/236x/c8/61/7b/c8617bc383dcbe035c77e22946439475.jpg',
-];
-
-LOUDBOT.prototype.ISSPECIAL = function ISSPECIAL(MSG)
+LOUDBOT.prototype.HANDLE_SPECIALS = function HANDLE_SPECIALS(DATA)
 {
-    if (!MSG) return;
-
-    if (MSG.toUpperCase().match(/BANANA/))
-    {
-        var M = Math.floor(Math.random() * BANANAS.length);
-        return BANANAS[M];
-    }
-
-    if (MSG.toUpperCase().match(/CLOWN\s*SHOES/))
-    {
-        return 'https://i.cloudup.com/MhNp5cf7Fz.gif';
-    }
+	var THIS = this;
+	var MSG = DATA.text;
+	if (!MSG) return;
+	if (MSG.match(/CLOWN\s*SHOES/i))
+	{
+		THIS.RTM.sendMessage('https://i.cloudup.com/MhNp5cf7Fz.gif', DATA.channel);
+	}
 };
 
 LOUDBOT.prototype.REMEMBER = function REMEMBER(LOUD)
 {
-    this.LOUDS.push(LOUD);
+	this.LOUDS.push(LOUD);
 
-    WAITING.push(LOUD);
-    if (SAVING) return;
+	WAITING.push(LOUD);
+	if (SAVING) return;
 
-    SAVING = true;
-    FS.appendFile(SAVEFILE, WAITING.join('\n') + '\n', 'UTF8', function()
-    {
-        SAVING = false;
-    });
-    WAITING.length = 0;
+	SAVING = true;
+	FS.appendFile(SAVEFILE, WAITING.join('\n') + '\n', 'UTF8', function()
+	{
+		SAVING = false;
+	});
+	WAITING.length = 0;
 };
 
-LOUDBOT.prototype.YELL = function YELL()
+LOUDBOT.prototype.YELL = function YELL(CHANNEL)
 {
-    var THIS = this;
+	var THIS = this;
 
-    var ROLL_THE_DICE = Math.floor(Math.random() * 100);
-    if (ROLL_THE_DICE >= 95)
-        return MARK.generatePhrase(4, 20);
+	var ROLL_THE_DICE = Math.floor(Math.random() * 100);
+	if (ROLL_THE_DICE >= 95)
+		return THIS.RTM.sendMessage(MARK.generatePhrase(10, 20), CHANNEL);
 
-    var LEN = THIS.LOUDS.length;
-    var L = Math.floor(Math.random() * LEN);
-    var LOUD = THIS.LASTLOUD = THIS.LOUDS[L];
-    return LOUD;
+	var LEN = THIS.LOUDS.length;
+	var L = Math.floor(Math.random() * LEN);
+	var LOUD = THIS.LASTLOUD = THIS.LOUDS[L];
+	THIS.RTM.sendMessage(LOUD, CHANNEL);
 };
 
 LOUDBOT.prototype.THELOUDS = function THELOUDS()
 {
-    return this.LOUDS;
+	return this.LOUDS;
 };

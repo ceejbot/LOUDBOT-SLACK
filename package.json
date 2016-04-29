@@ -7,9 +7,9 @@
     "url": "https://github.com/ceejbot/LOUDBOT-SLACK/issues"
   },
   "dependencies": {
-    "markoff": "^2.2.0",
-    "restify": "^2.6.2",
-    "slack-api": "ceejbot/slack-api"
+    "@slack/client": "~3.0.0",
+    "emoji-list": "~1.0.2",
+    "markoff": "~2.2.0"
   },
   "homepage": "https://github.com/ceejbot/LOUDBOT-SLACK",
   "keywords": [
