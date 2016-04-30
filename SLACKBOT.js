@@ -78,7 +78,7 @@ LOUDBOT.prototype.LISTENUP = function LISTENUP(DATA)
 };
 
 var CUSTOM_EMOJI = [
-    // put yours here
+    // YOUR CUSTOM EMOJI HERE
 ];
 
 var EMOJI = [];
@@ -159,7 +159,7 @@ LOUDBOT.prototype.YELL = function YELL(CHANNEL)
 
 	var LEN = THIS.LOUDS.length;
 	var L = Math.floor(Math.random() * LEN);
-	var LOUD = THIS.LASTLOUD = THIS.LOUDS[L];
+	var LOUD = THIS.LOUDS[L];
 	THIS.RTM.sendMessage(LOUD, CHANNEL);
 };
 
