@@ -7,9 +7,13 @@
     "url": "https://github.com/ceejbot/LOUDBOT-SLACK/issues"
   },
   "dependencies": {
-    "@slack/client": "~3.0.0",
+    "@slack/client": "~3.9.0",
+    "dotenv": "~4.0.0",
     "emoji-list": "~1.0.2",
-    "markoff": "~2.2.0"
+    "flip": "~1.0.0",
+    "knuth-shuffle": "~1.0.1",
+    "lru-cache": "~4.0.2",
+    "markov-chains-text": "~1.0.0"
   },
   "homepage": "https://github.com/ceejbot/LOUDBOT-SLACK",
   "keywords": [
@@ -23,7 +27,7 @@
     "url": "git://github.com/ceejbot/LOUDBOT-SLACK.git"
   },
   "scripts": {
-    "start": "node SLACKER.js",
+    "start": "node LOUDBOT.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   }
 }

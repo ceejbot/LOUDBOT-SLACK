@@ -1,8 +1,0 @@
-#!/usr/bin/env node
-
-var ASSERT = require('assert');
-ASSERT(process.env.SLACK_API_TOKEN, 'YOU MUST PROVIDE A SLACK API TOKEN IN THE ENVIRONMENT VARIABLE SLACK_API_TOKEN.');
-
-var SLACKBOT = require('./SLACKBOT.js');
-var LOUDBOT = new SLACKBOT();
-LOUDBOT.GOGOGO();
