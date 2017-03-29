@@ -1,7 +1,7 @@
 {
   "name": "loudbot-slack",
   "description": "LOUDBOT FOR SLACK.COM CHAT",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "author": "C J Silverio <ceejceej@gmail.com>",
   "bugs": {
     "url": "https://github.com/ceejbot/LOUDBOT-SLACK/issues"
