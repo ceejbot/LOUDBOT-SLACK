@@ -96,7 +96,6 @@ LOUDBOT.prototype.GOGOGO = function GOGOGO()
 	THIS.RTM.on(SLACK_EVENTS.RTM_CONNECTION_OPENED, function slackClientOpened()
 	{
 		LOG('THIS LOUDBOT IS NOW FULLY ARMED AND OPERATIONAL');
-		THIS.RTM.sendMessage('THIS LOUDBOT IS NOW FULLY ARMED AND OPERATIONAL', 'C026HPPTR');
 	});
 };
 
@@ -247,27 +246,6 @@ LOUDBOT.prototype.TAKE_OFF_ZIG = function TAKE_OFF_ZIG(DATA)
 
 LOUDBOT.prototype.CHOOSE_EMOJI = function CHOOSE_EMOJI(MSG)
 {
-	if (MSG.match(/BANANA/i))
-		return 'banana';
-
-	if (MSG.match(/RACCOON/i))
-		return 'raccoon';
-
-	if (MSG.match(/WOMBAT/i) && ROLL_D100(75))
-		return 'wombat';
-
-	if (MSG.match(/SHIP\s*IT/i) && ROLL_D100(50))
-		return 'sheep';
-
-	if ((MSG.match(/ELDER\s*GOD/i) || MSG.match(/CTHULHU/i)) && ROLL_D100(75))
-		return 'cthulhu';
-
-	if (MSG.match(/MILL?HOUSE/i) || MSG.match(/COMING\s+UP\W/i) || MSG.match(/NIXON/i) && ROLL_D100(75))
-		return 'milhouse';
-
-	if ((MSG.match(/GOSLING/i) || MSG.match(/GOOSE/i) || MSG.match(/GANDER/i)) && ROLL_D100(75))
-		return 'goose';
-
 	for (var I = 0; I < EMOJI_PATTERNS.length; I++)
 	{
 		if (MSG.match(EMOJI_PATTERNS[I]) && ROLL_D100(20))
