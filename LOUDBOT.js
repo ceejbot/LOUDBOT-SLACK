@@ -42,9 +42,9 @@ var LOUDBOT = module.exports = function LOUDBOT()
 
 	THIS.CACHE = LRU({ max: 2000, });
 
-	THIS.WEB = new SLACK.WebClient(process.env.SLACK_TOKEN);
+	THIS.WEB = new SLACK.WebClient(process.env.SLACK_API_TOKEN);
 	THIS.LOAD_EMOJI();
-	THIS.RTM = new SLACK.RtmClient(process.env.SLACK_TOKEN, {logLevel: 'warn'});
+	THIS.RTM = new SLACK.RtmClient(process.env.SLACK_API_TOKEN, {logLevel: 'warn'});
 	THIS.RTM.on(RTM_EVENTS.MESSAGE, function(DATA) { THIS.LISTENUP(DATA); });
 	THIS.RTM.on('error', function(INFRACTION) { LOG(INFRACTION); });
 };
